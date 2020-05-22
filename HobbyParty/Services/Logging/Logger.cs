@@ -34,8 +34,11 @@ namespace Services
             try
             {
                 var message = CreateMessage(o);
+                //Makes a list of Task<bool>'s for each logger in _loggers by using their LogAsync(LogMessage message) method, then awaits them
                 var taskList = _loggers.Select(logger => logger.LogAsync(message));
                 await Task.WhenAll(taskList);
+
+                //If any of the tasks returned false, method returns false
                 foreach(Task<bool> task in taskList)
                 {
                     if (task.Result == false)

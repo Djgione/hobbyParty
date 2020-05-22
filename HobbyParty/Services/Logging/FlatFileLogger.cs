@@ -23,18 +23,19 @@ namespace Services.Logging
             {
                 Directory.CreateDirectory(_filePath);
 
-                //split message TimeStamp into yyyy.MM.dd and HH:mm:ss:ffff
+                //Split message TimeStamp into yyyy.MM.dd and HH:mm:ss:ffff
                 var dateSplit = message.Timestamp.Split(' ');
                 var fileName = _filePath + dateSplit[0] + _fileType;
 
-                //create builder and add the time of log, message.Category, message.Message, and a comma with a new line operator
-                var builder = new StringBuilder();
-                builder.Append(dateSplit[1] + "| ");
-                builder.Append(message.Category + ": ");
+                //Create builder and add the time of log, message.Category, message.Message, and a comma with a new line operator
+                var builder = new StringBuilder(dateSplit[1]);
+                builder.Append(" | [");
+                builder.Append(message.Category);
+                builder.Append("] : ");
                 builder.Append(message.Message);
                 builder.Append(",\n");
 
-                //awaits process of adding all text contained within stringbuilder to the fileName, and can create in the process
+                //Awaits process of adding all text contained within stringbuilder to the fileName, and can create in the process
                 await File.AppendAllTextAsync(fileName, builder.ToString()).ConfigureAwait(false);
 
                 return true;

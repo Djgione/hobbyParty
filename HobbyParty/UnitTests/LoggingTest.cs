@@ -51,7 +51,10 @@ namespace UnitTests
       
 
 
-
+        /// <summary>
+        /// This Method tests to see if an exception is thrown when attempting to log some dumb shit
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException),
             "Object is not valid for Logging")]
