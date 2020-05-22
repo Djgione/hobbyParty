@@ -27,9 +27,10 @@ namespace Services.Logging
                 var dateSplit = message.Timestamp.Split(' ');
                 var fileName = _filePath + dateSplit[0] + _fileType;
 
-                //create builder and add the time of log, message.Message, and a comma with a new line operator
+                //create builder and add the time of log, message.Category, message.Message, and a comma with a new line operator
                 var builder = new StringBuilder();
-                builder.Append(dateSplit[1] + ": ");
+                builder.Append(dateSplit[1] + "| ");
+                builder.Append(message.Category + ": ");
                 builder.Append(message.Message);
                 builder.Append(",\n");
 
