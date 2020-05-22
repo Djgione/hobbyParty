@@ -4,6 +4,7 @@ using Services;
 using Services.Logging;
 using Services.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,39 @@ namespace UnitTests
             Assert.IsTrue(File.Exists(filePath));
             DeleteFlatFiles();
         }
+
+        [TestMethod]
+        public async Task ManyThreadsUsingFlatFileLogging()
+        {
+            DeleteFlatFiles();
+            var loggerList = new List<FlatFileLogger>() {
+                new FlatFileLogger(),
+                new FlatFileLogger(),
+                new FlatFileLogger()
+            };
+            var message = new LogMessage(DateTime.UtcNow.ToString(Constants.DateStringPattern), Services.Enums.LogCategories.DEBUG, "ligma sacc");
+            try {
+                var taskList = loggerList.Select(log => log.LogAsync(message));
+                var results = await Task.WhenAll(taskList);
+                var totalResult = true;
+                foreach(bool result in results)
+                {
+                    if(result == false)
+                    {
+                        totalResult = false;
+                    }
+                }
+                Assert.IsTrue(totalResult);
+            }
+            catch
+            {
+                Assert.Fail();
+            }
+            finally
+            {
+                DeleteFlatFiles();
+            }
+    }
 
         /// <summary>
         /// This method tests if the flat file will be appended to if it already exists
