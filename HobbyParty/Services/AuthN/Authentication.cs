@@ -18,6 +18,8 @@ namespace Services.AuthN
         public bool ValidateAccount(AccountRegistrationModel model)
         {
 
+
+            return false;
         }
 
         /// <summary>
@@ -28,6 +30,7 @@ namespace Services.AuthN
         public async Task<bool> RegisterAccountAsync(AccountRegistrationModel model, string salt)
         {
 
+            return false;
         }
 
         /// <summary>
