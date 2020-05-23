@@ -52,5 +52,35 @@ namespace UnitTests
             Assert.AreEqual(tupleResult, tupleResultSameSalt);
         }
 
+        /// <summary>
+        /// This method tests that two different inputs with the same salt will produce different hashes
+        /// </summary>
+        [TestMethod]
+        public void SameSaltDifferentInputTest()
+        {
+            var authService = new Authentication();
+            var tupleResult = authService.Hash("randomString", null);
+            var tupleResult2 = authService.Hash("randomStringNumberTwo", tupleResult.Item2);
+            Assert.AreNotEqual(tupleResult.Item1, tupleResult2.Item1);
+            Assert.AreEqual(tupleResult.Item2, tupleResult2.Item2);
+        }
+
+        /// <summary>
+        /// This method tests to see if the hashing algorithm can accept any special characters for utf8 encoding and such
+        /// </summary>
+        [TestMethod]
+        public void SpecialCharactersHashing()
+        {
+            var authService = new Authentication();
+            try
+            {
+                var tupleResult = authService.Hash("12346afl;kj,/'p...m[]\\-=+_-Ç¯àá¸2%", null);
+
+            }
+            catch
+            {
+                Assert.Fail();
+            }
+        }
     }
 }

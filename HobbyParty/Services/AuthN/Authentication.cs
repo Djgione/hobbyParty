@@ -51,7 +51,7 @@ namespace Services.AuthN
             }
             else
             {
-                salty = new byte[128 / 8];
+                salty = new byte[Constants.SaltLength];
                 using (var rng = RandomNumberGenerator.Create())
                 {
                     rng.GetBytes(salty);
