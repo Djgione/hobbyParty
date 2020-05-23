@@ -38,6 +38,17 @@ namespace UnitTests
             DeleteFlatFiles();
             var result = await Logger.Log("ligma", LogCategories.FATAL);
             Assert.IsTrue(result);
+
+            var currentDay = DateTime.UtcNow.ToString(Constants.DateStringPattern).Split(' ')[0];
+            var filePath = Environment.GetEnvironmentVariable("logPath", EnvironmentVariableTarget.Machine) + currentDay + ".csv";
+
+            using (StreamReader read = new StreamReader(File.OpenRead(filePath)))
+            {
+                if (!read.ReadLine().Contains("FATAL"))
+                {
+                    Assert.Fail();
+                }
+            }
             DeleteFlatFiles();
         }
 
@@ -47,6 +58,19 @@ namespace UnitTests
             DeleteFlatFiles();
             var result = await Logger.Log("ligma", null);
             Assert.IsTrue(result);
+
+            var currentDay = DateTime.UtcNow.ToString(Constants.DateStringPattern).Split(' ')[0];
+            var filePath = Environment.GetEnvironmentVariable("logPath", EnvironmentVariableTarget.Machine) + currentDay + ".csv";
+
+            using (StreamReader read = new StreamReader(File.OpenRead(filePath)))
+            {
+                if (!read.ReadLine().Contains("DEBUG"))
+                {
+                    Assert.Fail();
+                }
+                
+            }
+
             DeleteFlatFiles();
         }
 
