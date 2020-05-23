@@ -29,11 +29,11 @@ namespace Services
         /// </summary>
         /// <param name="o">Accepts any Object o, but really will only work with string or exception</param>
         /// <returns>A bool determining that all loggers succeeded</returns>
-        public static async Task<bool> Log(object o)
+        public static async Task<bool> Log(object o, LogCategories? category)
         {
             try
             {
-                var message = CreateMessage(o);
+                var message = CreateMessage(o, category);
                 //Makes a list of Task<bool>'s for each logger in _loggers by using their LogAsync(LogMessage message) method, then awaits them
                 var taskList = _loggers.Select(logger => logger.LogAsync(message));
                 await Task.WhenAll(taskList);
@@ -57,7 +57,7 @@ namespace Services
         /// </summary>
         /// <param name="input">Whatever object is passed into the Log, whether it be an exception or a string</param>
         /// <returns></returns>
-        private static LogMessage CreateMessage(object input)
+        private static LogMessage CreateMessage(object input, LogCategories? category)
         {
             var message = new LogMessage
             {
@@ -77,6 +77,10 @@ namespace Services
                     throw new ArgumentException("Object is not valid for Logging");
             }
 
+            if(category is LogCategories)
+            {
+                message.Category = (LogCategories)category;
+            }
             return message;
         }
 

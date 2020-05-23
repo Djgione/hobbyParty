@@ -1,6 +1,7 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Services;
+using Services.Enums;
 using Services.Logging;
 using Services.Models;
 using System;
@@ -24,13 +25,35 @@ namespace UnitTests
         {
             DeleteFlatFiles();
             var logger = new FlatFileLogger();
-            await logger.LogAsync(new LogMessage(DateTime.UtcNow.ToString(Constants.DateStringPattern), Services.Enums.LogCategories.DEBUG, "ligma sacc"));
+            await logger.LogAsync(new LogMessage(DateTime.UtcNow.ToString(Constants.DateStringPattern), LogCategories.DEBUG, "ligma sacc"));
             var currentDay = DateTime.UtcNow.ToString(Constants.DateStringPattern).Split(' ')[0];
             var filePath = Environment.GetEnvironmentVariable("logPath", EnvironmentVariableTarget.Machine) + currentDay + ".csv";
             Assert.IsTrue(File.Exists(filePath));
             DeleteFlatFiles();
         }
 
+        [TestMethod]
+        public async Task LoggingWithCategoryInsertion()
+        {
+            DeleteFlatFiles();
+            var result = await Logger.Log("ligma", LogCategories.FATAL);
+            Assert.IsTrue(result);
+            DeleteFlatFiles();
+        }
+
+        [TestMethod]
+        public async Task LoggingWithoutCategoryInsertion()
+        {
+            DeleteFlatFiles();
+            var result = await Logger.Log("ligma", null);
+            Assert.IsTrue(result);
+            DeleteFlatFiles();
+        }
+
+        /// <summary>
+        /// This method tests for threadsafety 
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         public async Task ManyThreadsUsingFlatFileLogging()
         {
@@ -94,7 +117,7 @@ namespace UnitTests
             "Object is not valid for Logging")]
         public async Task LogMessageCreationException()
         {
-            await Logger.Log(new FlatFileLogger());
+            await Logger.Log(new FlatFileLogger(), null);
         }
 
 
