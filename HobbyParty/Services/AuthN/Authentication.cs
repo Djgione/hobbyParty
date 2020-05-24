@@ -10,17 +10,7 @@ namespace Services.AuthN
 {
     public class Authentication
     {
-        /// <summary>
-        /// This method will be used to check all of the parameters of Account to make sure an account with that email is not already created and that the password meets minimum strength
-        /// </summary>
-        /// <param name="model">AccountRegistrationModel that contains email, password</param>
-        /// <returns>Bool with successCondition</returns>
-        public bool ValidateAccount(AccountRegistrationModel model)
-        {
-
-
-            return false;
-        }
+      
 
         /// <summary>
         /// This method will register the user inside of the database 
@@ -31,6 +21,20 @@ namespace Services.AuthN
         {
 
             return false;
+        }
+
+        /// <summary>
+        /// This method checks the strength of the password passed in to ensure it is of minimum requirements
+        /// </summary>
+        /// <param name="password">string to be checked</param>
+        /// <returns>Boolean depending on if password is correct strength</returns>
+        public bool CheckPasswordStrength(string password)
+        {
+            if(password.Length < Constants.PasswordMinimumLength)
+                return false;
+            if (!Constants.PasswordCharacterCheckRegex.IsMatch(password))
+                return false;
+            return true;
         }
 
         /// <summary>

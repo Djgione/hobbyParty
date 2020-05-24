@@ -1,15 +1,49 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Services.AuthN;
+using Services.Enums;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using Constants = Services.Enums.Constants;
 
 namespace UnitTests
 {
     [TestClass]
     public class AuthNTest
     {
+
+
+        [TestMethod]
+        public void PasswordUnderMinimumLengthFailure()
+        {
+            var authService = new Authentication();
+            //Always guarantees a length shorter than minimum
+            char[] arr = new char[Constants.PasswordMinimumLength - 1];
+            for(int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = 'f';
+            }
+            var password = arr.ToString();
+
+            Assert.IsFalse(authService.CheckPasswordStrength(password));
+        }
+
+        [TestMethod]
+        public void PasswordMeetsRequirements()
+        {
+            var authService = new Authentication();
+            var builder = new StringBuilder();
+            while(builder.Length < Constants.PasswordMinimumLength)
+            {
+                builder.Append("CSULB2020");
+            }
+
+            Assert.IsTrue(authService.CheckPasswordStrength(builder.ToString()));
+        }
+
+
         /// <summary>
         /// This method tests to see if a hash and salt are created when no salt is passed in
         /// </summary>
