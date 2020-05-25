@@ -21,12 +21,40 @@ namespace UnitTests
             var authService = new Authentication();
             //Always guarantees a length shorter than minimum
             char[] arr = new char[Constants.PasswordMinimumLength - 1];
-            for(int i = 0; i < arr.Length; i++)
+            for (int i = 0; i < arr.Length; i++)
             {
                 arr[i] = 'f';
             }
             var password = arr.ToString();
 
+            Assert.IsFalse(authService.CheckPasswordStrength(password));
+        }
+
+        [TestMethod]
+        public void PasswordMeetsMinimumLengthNoLetters()
+        {
+            var authService = new Authentication();
+            //Always guarantees a length greater than minimum
+            char[] arr = new char[Constants.PasswordMinimumLength +1];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = '9';
+            }
+            var password = arr.ToString();
+            Assert.IsFalse(authService.CheckPasswordStrength(password));
+        }
+
+        [TestMethod]
+        public void PasswordMeetsMinimumLengthNoNumbers()
+        {
+            var authService = new Authentication();
+            //Always guarantees a length greater than minimum
+            char[] arr = new char[Constants.PasswordMinimumLength +1];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = 'f';
+            }
+            var password = arr.ToString();
             Assert.IsFalse(authService.CheckPasswordStrength(password));
         }
 
@@ -37,7 +65,7 @@ namespace UnitTests
             var builder = new StringBuilder();
             while(builder.Length < Constants.PasswordMinimumLength)
             {
-                builder.Append("CSULB2020");
+                builder.Append("Richard*18");
             }
 
             Assert.IsTrue(authService.CheckPasswordStrength(builder.ToString()));
